@@ -1,0 +1,16 @@
+.footer{
+    background-color: #3C3C3B;
+    width: 100vw;
+    height: 8rem;
+    position: relative;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Yantramanav', sans-serif;
+    color: #FFF;
+    font-size: 1.2rem;
+    text-align: center;
+}
