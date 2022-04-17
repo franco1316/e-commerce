@@ -2,6 +2,7 @@
     padding-top: 130px;
     font-family: 'Yantramanav', sans-serif;
     margin: 1rem;
+    min-height: 100vh;
 }
 
 .home .filters-module{

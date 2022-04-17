@@ -128,7 +128,6 @@ export const PurchaseProductsInCartThunk = (cart) => {
     return dispatch => {
         dispatch(setIsLoading(true))
         return axios.post('https://ecommerce-api-react.herokuapp.com/api/v1/purchases', cart, getConfig())
-        .then(res=>console.log(res.data))
         .catch(error=>{
             if(error.response?.status===404){
                 dispatch(setPurchases([]))

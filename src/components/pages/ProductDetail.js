@@ -49,7 +49,7 @@ const ProductDetail = () => {
                 productFound&&
             <div className='product-detail'>
                 <span className='path '>
-                    <div className='flex-container-path'>
+                    <div className='flex-container-path1'>
                         <Link to={"/"} >
                             <p>
                                 Home

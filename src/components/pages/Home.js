@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { filterCategoryThunk, filterTitleThunk, getCategoriesThunk, getProductsThunk } from '../../redux/actions';
+import { addProductToCartThunk, filterCategoryThunk, filterTitleThunk, getCategoriesThunk, getProductsThunk, setProducts } from '../../redux/actions';
 import '../../styles/home.css';
 import searchIcon from '../../assets/search.png';
 import iClose from '../../assets/close.png';
@@ -26,11 +26,9 @@ const Root = () => {
 
     const [fromPrice, setFromPrice] = useState("");
     const [toPrice, setToPrice] = useState("");
-    const [screenSize, setScreenSize] = useState(0)
+    const [screenSize, setScreenSize] = useState(0);
 
- 
-
-
+    let productsFiltered=[]
     const products = useSelector(state=>state.products.data?.products)
     const categories=useSelector(state=>state.categories.data?.categories)
     
@@ -60,6 +58,31 @@ const Root = () => {
         e.preventDefault()
         dispatch(filterTitleThunk(search))
         setSearch("")
+    }
+
+    const filterProducts=(e, from, to)=>{
+        e.preventDefault()
+        let index=0
+        for(let i = 0; i<products.length; i++){
+            const price=products?.[i]?.price
+            if(parseFloat(price)<=parseFloat(to) && parseFloat(price)>=parseFloat(from)){
+                productsFiltered[index]=products[i]
+                index++;
+            }
+        }
+        console.log(productsFiltered);
+        setFromPrice("")
+        setToPrice("")
+    }
+
+    const addProductsToCart = (e, id) => {
+        e.preventDefault()
+        const productFound=products?.find(product=>product.id===Number(id))
+        const cart={
+            id: productFound.id,
+            quantity: 1
+        }
+        dispatch(addProductToCartThunk(cart))
     }
 
     return (
@@ -121,7 +144,7 @@ const Root = () => {
                                      />
                                  </span>
                                  <div className="container-button">
-                                     <button className="button-filter">
+                                     <button className="button-filter" onClick={e=>filterProducts(e, fromPrice, toPrice)}>
                                          <p className="filter-price">
                                              Filter price
                                         </p>
@@ -219,7 +242,9 @@ const Root = () => {
                 
                     <ul className='products'>
                         {
-                            products?.length===0?(
+                            
+                            
+                            (products?.length===0 && productsFiltered.length===0)?(
                                 <p>Don't found any result with this search</p>
                             ):(
                                 products?.map(product=>(
@@ -242,7 +267,42 @@ const Root = () => {
                                                             </p>
                                                         </h3>
                                                         <div className="container-button">
-                                                            <button className="button-shop-cart">
+                                                            <button className="button-shop-cart" onClick={e=>addProductsToCart(e, product.id)}>
+                                                                <img src={iShoppingCart} alt="buy" className="i-shop-cart" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        }
+                                    </li>
+                                ))
+                            )
+                            }
+                            
+                            { 
+                                productsFiltered.length>0 &&(
+                                productsFiltered?.map(product=>(
+                
+                                    <li key={product.id}>
+                                        {
+                                            <div className='product'>
+                
+                                                <Link to={`/product/${product.id}`}>
+                                                    <div className='container-img-products'>
+                                                        <img className='img-products' src={product.productImgs} alt="img" />
+                                                    </div>
+                                                    <div className='separator-horizontal'></div>
+                                                    <div className="container-info-product">
+                                                    
+                                                        <h2 className='title'>{product.title}</h2>
+                                                        <h3 className='price'>Price
+                                                            <p className="price-text">
+                                                                $ {product.price}
+                                                            </p>
+                                                        </h3>
+                                                        <div className="container-button">
+                                                            <button className="button-shop-cart" onClick={e=>addProductsToCart(e, product.id)}>
                                                                 <img src={iShoppingCart} alt="buy" className="i-shop-cart" />
                                                             </button>
                                                         </div>
@@ -254,6 +314,7 @@ const Root = () => {
                                 ))
                             )
                         }
+                    
                     </ul>
             </main>
         </div>

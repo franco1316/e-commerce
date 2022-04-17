@@ -9,13 +9,13 @@
     cursor: pointer;
 }
 
-.flex-container-path{
-    min-width: 280px;
-    width: max-content;
+.flex-container-path1{
+    min-width: max-content;
+    width: 30vw;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin: -30px 0 30px 15px;
+    margin: 50px 0 30px 80px;
 }
 
 .dot{
