@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addProductToCartThunk, filterCategoryThunk, filterTitleThunk, getCategoriesThunk, getProductsThunk, setProducts } from '../../redux/actions';
+import { addProductToCartThunk, filterCategoryThunk, filterTitleThunk, getCategoriesThunk, getProductsThunk } from '../../redux/actions';
 import '../../styles/home.css';
 import searchIcon from '../../assets/search.png';
 import iClose from '../../assets/close.png';
@@ -28,7 +28,8 @@ const Root = () => {
     const [toPrice, setToPrice] = useState("");
     const [screenSize, setScreenSize] = useState(0);
 
-    let productsFiltered=[]
+    let currentFiltered=[]
+    const [index, setIndex] = useState(0);
     const products = useSelector(state=>state.products.data?.products)
     const categories=useSelector(state=>state.categories.data?.categories)
     
@@ -62,15 +63,14 @@ const Root = () => {
 
     const filterProducts=(e, from, to)=>{
         e.preventDefault()
-        let index=0
-        for(let i = 0; i<products.length; i++){
+            for(let i = 0; i<products.length; i++){
             const price=products?.[i]?.price
             if(parseFloat(price)<=parseFloat(to) && parseFloat(price)>=parseFloat(from)){
-                productsFiltered[index]=products[i]
-                index++;
+                currentFiltered[index]=products[i]
+                setIndex(index+1)
             }
         }
-        console.log(productsFiltered);
+        console.log(index);
         setFromPrice("")
         setToPrice("")
     }
@@ -244,7 +244,7 @@ const Root = () => {
                         {
                             
                             
-                            (products?.length===0 && productsFiltered.length===0)?(
+                            (products?.length===0 && index===0)?(
                                 <p>Don't found any result with this search</p>
                             ):(
                                 products?.map(product=>(
@@ -281,8 +281,8 @@ const Root = () => {
                             }
                             
                             { 
-                                productsFiltered.length>0 &&(
-                                productsFiltered?.map(product=>(
+                                index>0 &&(
+                                currentFiltered?.map(product=>(
                 
                                     <li key={product.id}>
                                         {
@@ -316,6 +316,10 @@ const Root = () => {
                         }
                     
                     </ul>
+
+                    {
+                        console.log(index)
+                    }
             </main>
         </div>
     );
