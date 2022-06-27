@@ -22,7 +22,7 @@ const NavBar = () => {
     const [loginError, setLoginError] = useState("");
     const [createError, setCreateError] = useState("");
 
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const cleanBoxes = () => {
@@ -42,11 +42,13 @@ const NavBar = () => {
 
         axios.post('https://ecommerce-api-react.herokuapp.com/api/v1/users', user)
         .then(res =>
-            console.log(res.data)
+            setCreateError(res.data.status)
         )
         .catch(error => {
-            console.log(error.response);
-            setCreateError(error.response.data.message)
+            error.response.data.message === 'Must be 10 digits long' ? 
+                setCreateError('Phone length ' + error.response.data.message + ' for this app')
+            :
+                setCreateError(error.response.data.message)
         })
 
         cleanBoxes()

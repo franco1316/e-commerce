@@ -30,7 +30,7 @@ const Root = () => {
 
     let currentFiltered = []
     const [index, setIndex] = useState(0);
-    const products = useSelector(state => state.products.data?.products)
+    const [products, setProducts] = useState(useSelector(state => state.products.data?.products));
     const categories = useSelector(state => state.categories.data?.categories)
     
 
@@ -63,10 +63,11 @@ const Root = () => {
             for(let i = 0; i < products.length; i++){
             const price = products?.[i]?.price
             if((parseFloat(price) <= parseFloat(to)) && (parseFloat(price) >= parseFloat(from))){
-                currentFiltered[index] = products[i]
-                setIndex(index + 1)
+                currentFiltered = [...currentFiltered, products[i]]
+                setIndex(i)
             }
         }
+        setProducts(currentFiltered)
         setFromPrice("")
         setToPrice("")
     }
