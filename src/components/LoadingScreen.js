@@ -3,11 +3,11 @@ import '../styles/loadingScreen.css';
 
 const LoadingScreen = () => {
     return (
-        <div className='loading-screen'>
-            <div className="lds-ripple external">
-                <div className='external'>
+        <div className = 'loading-screen'>
+            <div className = "lds-ripple external">
+                <div className = 'external'>
                     <div></div>
-                    <h2 className="internal">Loading...</h2>
+                    <h2 className = "internal">Loading...</h2>
                 </div>
             </div>
         </div>

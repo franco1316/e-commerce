@@ -2,15 +2,16 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getPurchasesThunk, getShoppingCartProductsThunk, loginThunk } from '../redux/actions';
-import '../styles/navBar.css';
-import {Shop} from '../components'
+import { Shop } from '../components'
 import { useNavigate } from 'react-router-dom';
+import '../styles/navBar.css';
 
 const NavBar = () => {
 
     const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isShoppingCartOpen, setIsShoppingCartOpen] = useState(false);
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -30,61 +31,62 @@ const NavBar = () => {
         setPhone(""); setRole("")
     }
 
-    const createUser=(e)=>{
+    const createUser = (e) => {
         e.preventDefault()
+
         const user = {
-            firstName,
-            lastName,
-            email,
-            password,
-            phone,
-            role
+            firstName, lastName,
+            email, password,
+            phone, role
         }
+
         axios.post('https://ecommerce-api-react.herokuapp.com/api/v1/users', user)
-        .then(res=>
+        .then(res =>
             console.log(res.data)
         )
-        .catch(error=>{
+        .catch(error => {
+            console.log(error.response);
             setCreateError(error.response.data.message)
         })
-        cleanBoxes()
 
+        cleanBoxes()
     }
 
-    const login=(e)=>{
+    const login = (e) => {
         e.preventDefault()
+
         const credentials = {
-            email,
-            password
+            email, password
         }
+
         dispatch(loginThunk(credentials))
-        .then(res=>{
+        .then(res => {
             localStorage.setItem("token", res.data.data.token)
             setLoginError("")
         })
-        .catch(error=>{
+        .catch(error => {
             setLoginError(error.response.data.message);
         })
-        cleanBoxes()
 
+        cleanBoxes()
     }
 
     const updateCreateUser = (e) => {
-        if(e!==null)
-        setIsCreateUserOpen(!isCreateUserOpen)
+        if(e !== null)
+            setIsCreateUserOpen(!isCreateUserOpen)
         setIsLoginOpen(false)
         setCreateError("")
     }
 
     const updateLoginUser = (e) => {
-        if(e!==null)
-        setIsLoginOpen(!isLoginOpen)
+        if(e !== null)
+            setIsLoginOpen(!isLoginOpen)
         setIsCreateUserOpen(false)
         setLoginError("")
     }
 
     const updateShoppingCart = (e) => {
-        if(e!==null){
+        if(e !== null){
             setIsShoppingCartOpen(!isShoppingCartOpen)
             dispatch(getShoppingCartProductsThunk())
         }
@@ -99,187 +101,168 @@ const NavBar = () => {
 
     return (
         <div className={`nav-form
-            ${isCreateUserOpen?'open-create-user':''}
-            ${isLoginOpen?'open-login':''}`}
+            ${isCreateUserOpen ? 'open-create-user' : ''}
+            ${isLoginOpen ? 'open-login' : ''}`}
         >
-            <nav className='nav-bar'>
-                <section className='title'>
-                    <h1 className='title-text'>
-                        <strong className="strong-title">
-                            e-commerce
-                        </strong>
+            <nav className = 'nav-bar'>
+                <section className = 'title'>
+                    <h1 className = 'title-text'>
+                        <strong className = "strong-title">e-commerce</strong>
                     </h1>
                 </section>
-                <section className="actions flex">
-                    <div className='separator-vertical first-separator-vertical'></div>
-                            <button onClick={e=>updateLoginUser(e)} className='button-actions'>
-                                <i className={`fa-solid fa-user img-i ${(isLoginOpen || isCreateUserOpen) ? 'i-icon-selected' : 'i-icon'} `}></i>
-                            </button>
-                    <div className='separator-vertical'></div>
-                            <button className='button-actions' onClick={e=>showMyPurchases(e)}>
-                                <i className='fa-solid fa-shop img-i i-icon'></i>
-                            </button>
-                    <div className='separator-vertical'></div>
-                        <button onClick={e=>updateShoppingCart(e)} className='button-actions'>
-                            <i className={`fa-solid fa-cart-shopping img-i ${isShoppingCartOpen ? 'i-icon-selected' : 'i-icon'} `}></i>
-                        </button>
+                <section className = "actions flex">
+                    <div className = 'separator-vertical first-separator-vertical'></div>
+                    <button onClick = {e => updateLoginUser(e)} className = 'button-actions'>
+                        <i className = {`fa-solid fa-user img-i ${(isLoginOpen || isCreateUserOpen) ? 'i-icon-selected' : 'i-icon'}`}></i>
+                    </button>
+                    <div className = 'separator-vertical'></div>
+                    <button className = 'button-actions' onClick = {e => showMyPurchases(e)}>
+                        <i className = 'fa-solid fa-shop img-i i-icon'></i>
+                    </button>
+                    <div className = 'separator-vertical'></div>
+                    <button onClick = {e => updateShoppingCart(e)} className = 'button-actions'>
+                        <i className = {`fa-solid fa-cart-shopping img-i ${isShoppingCartOpen ? 'i-icon-selected' : 'i-icon'} `}></i>
+                    </button>
                 </section>
             </nav>
-            <hr className='separator-horizontal'/>
-            <form action="" onSubmit={createUser} className={`login ${isCreateUserOpen&&'open'}`}>
-                
-            <section className="grid-form">
-                <article className="elements">
-                    <label htmlFor="first-name">First Name:</label>
+            <hr className = 'separator-horizontal'/>
+            <form action = "" onSubmit = {createUser} className = {`login ${isCreateUserOpen && 'open'}`}>
+                <section className = "grid-form">
+                    <article className = "elements">
+                        <label htmlFor = "first-name">First Name: </label>
                         <input
-                            type="text"
-                            placeholder='First name'
-                            name="first-name"
-                            id="first-name"
-                            onChange={(e)=>setFirstName(e.target.value)}
-                            value={firstName}
-                        />
-                </article>
-                <article className="elements">
-                    <label htmlFor="last-name">Last Name:</label>
-                        <input
-                            type="text"
-                            placeholder='Last name'
-                            name="last-name"
-                            id="last-name"
-                            onChange={(e)=>setLastName(e.target.value)}
-                            value={lastName}
-                        />
-                </article>
-                
-                    <article className="elements">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
-                            placeholder='Email'
-                            name="email"
-                            id="email"
-                            onChange={(e)=>setEmail(e.target.value)}
-                            value={email}
+                            type = "text"
+                            placeholder = 'First name'
+                            name = "first-name"
+                            id = "first-name"
+                            onChange = {(e) => setFirstName(e.target.value)}
+                            value = {firstName}
                         />
                     </article>
-                    <article className="elements">
-                        <label htmlFor="password">Password:</label>
+                    <article className = "elements">
+                        <label htmlFor = "last-name">Last Name: </label>
                         <input
-                            type="password"
-                            placeholder='Password'
-                            name="password"
-                            id="password"
-                            onChange={(e)=>setPassword(e.target.value)}
-                            value={password}
+                            type = "text"
+                            placeholder = 'Last name'
+                            name = "last-name"
+                            id = "last-name"
+                            onChange = {(e) => setLastName(e.target.value)}
+                            value = {lastName}
                         />
                     </article>
-                <article className="elements">
-                    <label htmlFor="phone">Phone:</label>
+                    <article className = "elements">
+                        <label htmlFor = "email">Email: </label>
                         <input
-                            type="text"
-                            placeholder='Phone'
-                            name="phonee"
-                            id="phone"
-                            onChange={(e)=>setPhone(e.target.value)}
-                            value={phone}
+                            type = "email"
+                            placeholder = 'Email'
+                            name = "email"
+                            id = "email"
+                            onChange = {(e) => setEmail(e.target.value)}
+                            value = {email}
                         />
-                </article>
-                <article className="elements">
-                    <label htmlFor="role">Role:</label>
+                    </article>
+                    <article className = "elements">
+                        <label htmlFor = "password">Password: </label>
                         <input
-                            type="text"
-                            placeholder='Role'
-                            name="role"
-                            id="role"
-                            onChange={(e)=>setRole(e.target.value)}
-                            value={role}
+                            type = "password"
+                            placeholder = 'Password'
+                            name = "password"
+                            id = "password"
+                            onChange = {(e) => setPassword(e.target.value)}
+                            value = {password}
                         />
-                </article>
-            </section>
-
-                {
-                    isCreateUserOpen&&
-                        (
-                            <p className='message-error'>
-                                {createError}
-                            </p>
-                        )
-                }
-                <button className='form-submit'>Create New User</button>
-
-                <span className="flex-container">
-                    <p>
-                        Have an account?
-                    </p>
-                    <button onClick={e=>updateLoginUser(e)}>
+                    </article>
+                    <article className = "elements">
+                        <label htmlFor="phone">Phone: </label>
+                        <input
+                            type = "text"
+                            placeholder = 'Phone'
+                            name = "phonee"
+                            id = "phone"
+                            onChange = {(e) => setPhone(e.target.value)}
+                            value = {phone}
+                        />
+                    </article>
+                    <article className = "elements">
+                        <label htmlFor = "role">Role: </label>
+                        <input
+                            type = "text"
+                            placeholder = 'Role'
+                            name = "role"
+                            id = "role"
+                            onChange = {(e) => setRole(e.target.value)}
+                            value = {role}
+                        />
+                    </article>
+                </section>
+                    {
+                        isCreateUserOpen &&
+                            (
+                                <p className = 'message-error'>
+                                    {createError}
+                                </p>
+                            )
+                    }
+                <button className = 'form-submit'>Create New User</button>
+                <span className = "flex-container">
+                    <p>Have an account?</p>
+                    <button onClick = {e => updateLoginUser(e)}>
                         Log in
                     </button>
                 </span>
             </form>
 
-            <form action="" onSubmit={login} className={`login ${isLoginOpen&&'open'}`}>
-            
-            {
-                localStorage.getItem("token") ?
-                    <button onClick={()=>localStorage.setItem("token", "")}>
-                        {localStorage.getItem("token")&&"Log out"}
-                    </button>
-                :(
-                    <>
-                        <section className="grid-form">
-            
-                                <article className="elements">
-                                    <label htmlFor="email">Email:</label>
-                                    <input
-                                        type="email"
-                                        placeholder='Email'
-                                        name="email"
-                                        id="login-email"
-                                        onChange={(e)=>setEmail(e.target.value)}
-                                        value={email}
-                                    />
-                                </article>
-                                <article className="elements">
-                                    <label htmlFor="password">Password:</label>
-                                    <input
-                                        type="password"
-                                        placeholder='Password'
-                                        name="password"
-                                        id="login-password"
-                                        onChange={(e)=>setPassword(e.target.value)}
-                                        value={password}
-                                    />
-                                </article>
-            
-                        </section>
+            <form action = "" onSubmit = {login} className = {`login ${isLoginOpen && 'open'}`}>
+                {
+                    localStorage.getItem("token") ?
+                        <button onClick={() => localStorage.setItem("token", "")}>
+                            {localStorage.getItem("token") && "Log out"}
+                        </button>
+                    : (
+                        <>
+                            <section className = "grid-form">
+                                    <article className = "elements">
+                                        <label htmlFor = "email">Email: </label>
+                                        <input
+                                            type = "email"
+                                            placeholder = 'Email'
+                                            name = "email"
+                                            id = "login-email"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            value = {email}
+                                        />
+                                    </article>
+                                    <article className = "elements">
+                                        <label htmlFor = "password">Password: </label>
+                                        <input
+                                            type = "password"
+                                            placeholder = 'Password'
+                                            name = "password"
+                                            id = "login-password"
+                                            onChange = {(e) => setPassword(e.target.value)}
+                                            value = {password}
+                                        />
+                                    </article>
+                            </section>
                             {
-                                isLoginOpen&&
+                                isLoginOpen &&
                                     (
                                         <p className='message-error'>
                                             {loginError}
                                         </p>
                                     )
                             }
-                            <button className='form-submit'>Login</button>
-
-                            <span className="flex-container">
-                                <p>
-                                    Don't have an account?
-                                </p>
-                                <button onClick={e=>updateCreateUser(e)}>
-                                    Sign up
-                                </button>
+                            <button className = 'form-submit'>Login</button>
+                            <span className = "flex-container">
+                                <p>Don't have an account?</p>
+                                <button onClick = {e => updateCreateUser(e)}>Sign up</button>
                             </span>
-                    </>
-                )
-            }
-                
-                
+                        </>
+                    )
+                }
             </form>
-                <Shop isOpen = {isShoppingCartOpen}/>
-           
-
+            
+            <Shop isOpen = {isShoppingCartOpen}/>
         </div>
     );
 };

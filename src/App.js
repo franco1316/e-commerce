@@ -7,24 +7,25 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 
 
 function App() {
-  const isLoading=useSelector(state=>state.isLoading)
+  const isLoading = useSelector(state => state.isLoading)
  
  
   return (
     <HashRouter>
-      <div className="App">
-        {isLoading&&<LoadingScreen/>}
+      <div className = "App">
+        {
+          isLoading && <LoadingScreen/>
+        }
         <NavBar/>
         <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/product/:id" element={<ProductDetail/>}/>
-          <Route element={<ProtectedRoutes/>}>
-            <Route path="/purchases" element={<Purchases/>}></Route>
+          <Route path = "/" element = {<Home/>}/>
+          <Route path = "/product/:id" element = {<ProductDetail/>}/>
+          <Route element = {<ProtectedRoutes/>}>
+            <Route path = "/purchases" element = {<Purchases/>}></Route>
           </Route>
         </Routes>
         {
-          !isLoading&&
-          <Footer/>
+          !isLoading && <Footer/>
         }
       </div>
     </HashRouter>
